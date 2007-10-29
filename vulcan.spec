@@ -1,12 +1,12 @@
 Summary:	A chess variant
 Summary(pl.UTF-8):	Odmiana szachów
 Name:		vulcan
-Version:	0.4
+Version:	0.5.1
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications/Games
 Source0:	http://www.fzort.org/mpr/projects/vulcan/%{name}-%{version}.tar.gz
-# Source0-md5:	175a91196744b3dbe7fb23581080398f
+# Source0-md5:	b5c5f0729038285012fb22a390d76458
 Patch0:		%{name}-datadir.patch
 URL:		http://www.fzort.org/mpr/projects/vulcan/
 BuildRequires:	OpenGL-devel
@@ -25,7 +25,7 @@ zainspirowaną dobrze znanymi serialami science fiction.
 %prep
 %setup -q
 %patch0 -p1
-%{__sed} -i 's@data/@%{_datadir}/%{name}/@' {data/font/VeraSe.fontdef,vulcan-ui.c}
+%{__sed} -i 's@data/@%{_datadir}/%{name}/@' {ui.c,render.c,data/font/*.fontdef}
 
 %build
 %{__make} \
@@ -46,6 +46,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog README TECH TODO
+%doc ChangeLog README TECH
 %attr(755,root,root) %{_bindir}/vulcan
 %{_datadir}/%{name}
