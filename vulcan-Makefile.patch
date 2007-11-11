@@ -1,0 +1,53 @@
+--- vulcan-0.7.1/Makefile~	2007-11-11 18:11:06.000000000 +0100
++++ vulcan-0.7.1/Makefile	2007-11-11 18:11:03.000000000 +0100
+@@ -1,4 +1,4 @@
+-PREFIX = /usr/local
++PREFIX = /usr
+ BIN = $(PREFIX)/bin
+ 
+ DATA_DIR = $(PREFIX)/share/vulcan
+@@ -12,7 +12,7 @@
+ LD	= gcc
+ YACC	= bison -y
+ LEX	= flex
+-CFLAGS	= -O2 -g -Wall -I/usr/X11R6/include -I/usr/local/include -DDATA_DIR=\"$(DATA_DIR)\" -DFONT_DIR=\"$(FONT_DIR)\" -DMODEL_DIR=\"$(MODEL_DIR)\" -DTEXTURE_DIR=\"$(TEXTURE_DIR)\"
++CFLAGS	= -Wall -DDATA_DIR=\"$(DATA_DIR)\" -DFONT_DIR=\"$(FONT_DIR)\" -DMODEL_DIR=\"$(MODEL_DIR)\" -DTEXTURE_DIR=\"$(TEXTURE_DIR)\"
+ YFLAGS	= -d
+ LFLAGS	= 
+ YFILES	= vrml.y modeldef.y fontdef.y
+@@ -64,7 +64,7 @@
+ 	$(LEX) $(LFLAGS) -o$@ $<
+ 
+ .c.o:
+-	$(CC) $(CFLAGS) -c $<
++	$(CC) $(OPTFLAGS) $(CFLAGS) -c $<
+ 
+ clean:
+ 	rm -f *.o *~ core* *.stackdump $(YFILES:.y=_y_tab.[ch]) $(LFILES:.l=_lex_yy_i.h) $(TARGET) $(TARBALL) MANIFEST
+@@ -78,17 +78,15 @@
+ 	(cd ..; rm vulcan-$(VERSION))
+ 
+ install: $(TARGET)
+-	install -s -m 755 $(TARGET) $(BIN)
+-	install -m 755 -d $(DATA_DIR)
+-	install -m 755 -d $(FONT_DIR)
+-	cp data/fonts/* $(FONT_DIR)
+-	chmod 644 $(FONT_DIR)/*
+-	install -m 755 -d $(MODEL_DIR)
+-	cp data/models/* $(MODEL_DIR)
+-	chmod 644 $(MODEL_DIR)/*
+-	install -m 755 -d $(TEXTURE_DIR)
+-	cp data/textures/* $(TEXTURE_DIR)
+-	chmod 644 $(TEXTURE_DIR)/*
++	mkdir -p $(DESTDIR){$(BIN),$(FONT_DIR),$(MODEL_DIR),$(TEXTURE_DIR)}
++	install $(TARGET) $(DESTDIR)$(BIN)
++	install -d $(DESTDIR)$(DATA_DIR)
++	install -d $(DESTDIR)$(FONT_DIR)
++	cp data/fonts/* $(DESTDIR)$(FONT_DIR)
++	install -d $(DESTDIR)$(MODEL_DIR)
++	cp data/models/* $(DESTDIR)$(MODEL_DIR)
++	install -d $(DESTDIR)$(TEXTURE_DIR)
++	cp data/textures/* $(DESTDIR)$(TEXTURE_DIR)
+ 
+ distclean:
+ 	rm -f $(BIN)/$(TARGET)
