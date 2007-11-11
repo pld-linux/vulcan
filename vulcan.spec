@@ -1,16 +1,16 @@
 Summary:	A chess variant
 Summary(pl.UTF-8):	Odmiana szachów
 Name:		vulcan
-Version:	0.6
+Version:	0.7.1
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications/Games
 Source0:	http://www.fzort.org/mpr/projects/vulcan/%{name}-%{version}.tar.gz
-# Source0-md5:	59f991cc58c3b2af47d1e83b0b6ea47d
+# Source0-md5:	10e5159d9744105dc3d8751d70c6bb92
+Patch0:		%{name}-Makefile.patch
 URL:		http://www.fzort.org/mpr/projects/vulcan/
 BuildRequires:	OpenGL-devel
 BuildRequires:	libpng-devel
-BuildRequires:	sed >= 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -23,21 +23,20 @@ zainspirowaną dobrze znanymi serialami science fiction.
 
 %prep
 %setup -q
-%{__sed} -i 's@data/@%{_datadir}/%{name}/@g' {ui.c,render.c}
+%patch0 -p1
 
 %build
 %{__make} \
 	CC="%{__cc}" \
 	LD=%{__cc} \
-	CFLAGS="%{rpmcflags}" \
+	OPTFLAGS="%{rpmcflags}" \
 	LDFLAGS="%{rpmldflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/%{name}}
 
-install vulcan $RPM_BUILD_ROOT%{_bindir}
-cp -r data/* $RPM_BUILD_ROOT%{_datadir}/%{name}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
